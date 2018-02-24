@@ -48,7 +48,7 @@ func NewClient(webhook, token string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	zc := &Client{
+	c := &Client{
 		WebhookURL: p,
 		HTTPClient: &http.Client{},
 		Header: map[string]string{
@@ -57,7 +57,7 @@ func NewClient(webhook, token string) (*Client, error) {
 		},
 	}
 
-	return zc, nil
+	return c, nil
 }
 
 func makeJSONMassage(msg *Message) ([]byte, error) {
