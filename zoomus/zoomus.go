@@ -8,9 +8,9 @@ import (
 	"net/url"
 )
 
-// Client is zoom.us HTTP client
+// Client is zoom.us HTTP client.
 type Client struct {
-	// WebhookURL is URL of your zoom.us for webhook
+	// WebhookURL is URL of your zoom.us for webhook.
 	WebhookURL *url.URL
 
 	HTTPClient *http.Client
@@ -18,10 +18,11 @@ type Client struct {
 	// Header should have following key:
 	// - "Content-Type": this is for HTTP header,
 	//	 this should be "application/json".
-	// - "X-Zoom-Token": this is necessary for request to zoom.us
+	// - "X-Zoom-Token": this is necessary for request to zoom.us.
 	Header map[string]string
 }
 
+// Message represents message which wiil be sent to your zoom room.
 type Message struct {
 	Title   string `json:"title"`
 	Summary string `json:"summary"`
