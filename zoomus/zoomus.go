@@ -74,6 +74,8 @@ func makeJSONMassage(msg *Message) ([]byte, error) {
 	return msgJSON, nil
 }
 
+// SendMessage sends given message to your zoom room.
+// if it's successful, nill will be returned.
 func (c *Client) SendMessage(msg *Message) error {
 	msgJSON, err := makeJSONMassage(msg)
 	if err != nil {
