@@ -24,10 +24,19 @@ type Client struct {
 
 // Message represents message which wiil be sent to your zoom room.
 type Message struct {
-	Title   string `json:"title"`
+	// Title will be shown in top of message.
+	Title string `json:"title"`
+
+	// Summary will be shown in middle of message.
 	Summary string `json:"summary"`
-	Body    string `json:"body"`
-	Action  string `json:"action"`
+
+	// Body will be shown in main message.
+	Body string `json:"body"`
+
+	// Action should be "send" or "copy".
+	// if it's "send", message will be showen with send button.
+	// if it's "copy", copy button will be showen.
+	Action string `json:"action"`
 }
 
 var (
