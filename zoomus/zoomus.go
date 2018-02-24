@@ -8,7 +8,8 @@ import (
 	"net/url"
 )
 
-type ZoomClient struct {
+//
+type Client struct {
 	WebhookURL *url.URL
 	HTTPClient *http.Client
 	Header     map[string]string
@@ -29,7 +30,7 @@ var (
 	}
 )
 
-func NewZoomClient(webhook, token string) (*ZoomClient, error) {
+func NewClient(webhook, token string) (*Client, error) {
 	if len(token) == 0 {
 		return nil, fmt.Errorf("token is missing")
 	}
@@ -38,7 +39,7 @@ func NewZoomClient(webhook, token string) (*ZoomClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	zc := &ZoomClient{
+	zc := &Client{
 		WebhookURL: p,
 		HTTPClient: &http.Client{},
 		Header: map[string]string{
@@ -64,18 +65,18 @@ func makeJSONMassage(msg *Message) ([]byte, error) {
 	return msgJSON, nil
 }
 
-func (zc *ZoomClient) SendMessage(msg *Message) error {
+func (c *Client) SendMessage(msg *Message) error {
 	msgJSON, err := makeJSONMassage(msg)
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequest("POST", zc.WebhookURL.String(), bytes.NewBuffer(msgJSON))
-	for k, v := range zc.Header {
+	req, err := http.NewRequest("POST", c.WebhookURL.String(), bytes.NewBuffer(msgJSON))
+	for k, v := range c.Header {
 		req.Header.Set(k, v)
 	}
-	res, err := zc.HTTPClient.Do(req)
+	res, err := c.HTTPClient.Do(req)
 	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("http request failed: status: %s: url=%s", res.Status, zc.WebhookURL.String())
+		return fmt.Errorf("http request failed: status: %s: url=%s", res.Status, c.WebhookURL.String())
 	}
 	return nil
 }
