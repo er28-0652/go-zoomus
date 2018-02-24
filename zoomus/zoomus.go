@@ -38,6 +38,7 @@ var (
 	}
 )
 
+// NewClient initialize Client with given webhook URL and Token.
 func NewClient(webhook, token string) (*Client, error) {
 	if len(token) == 0 {
 		return nil, fmt.Errorf("token is missing")
