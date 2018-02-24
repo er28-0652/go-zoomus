@@ -13,14 +13,14 @@ func getEnvs() (string, string) {
 
 func TestSendMessage(t *testing.T) {
 	webhook, token := getEnvs()
-	zoom, err := NewZoomClient(webhook, token)
+	zoom, err := NewClient(webhook, token)
 	if err != nil {
 		t.Fatal(err)
 	}
 	msg := Message{
-		Title: "this is title",
+		Title:   "this is title",
 		Summary: "this is summary",
-		Body: "this is body",
+		Body:    "this is body",
 	}
 	err = zoom.SendMessage(&msg)
 	if err != nil {
