@@ -27,3 +27,17 @@ func TestSendMessage(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestMakeJSONMassage(t *testing.T) {
+	tests := []Message{
+		Message{"this is title", "this is summary", "this is body", "send"},
+		Message{"", "", "", ""},
+		Message{Title: "this is title", Summary: "this is summary", Body: "this is body"},
+	}
+	for _, test := range tests {
+		_, err := makeJSONMassage(&test)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+}
