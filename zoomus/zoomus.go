@@ -8,11 +8,18 @@ import (
 	"net/url"
 )
 
-//
+// Client is zoom.us HTTP client
 type Client struct {
+	// WebhookURL is URL of your zoom.us for webhook
 	WebhookURL *url.URL
+
 	HTTPClient *http.Client
-	Header     map[string]string
+
+	// Header should have following key:
+	// - "Content-Type": this is for HTTP header,
+	//	 this should be "application/json".
+	// - "X-Zoom-Token": this is necessary for request to zoom.us
+	Header map[string]string
 }
 
 type Message struct {
