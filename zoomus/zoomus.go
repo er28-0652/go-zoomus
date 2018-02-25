@@ -74,8 +74,17 @@ func makeJSONMassage(msg *Message) ([]byte, error) {
 		Title:   fmt.Sprintf(msgFormat, msg.Title),
 		Summary: fmt.Sprintf(msgFormat, msg.Title),
 		Body:    fmt.Sprintf(msgFormat, msg.Body),
-		Action:  fmt.Sprintf(actionFormat[msg.Action], msg.Action),
 	}
+	if len(msg.Action) != 0 {
+		value, ok := actionFormat[msg.Action]
+		if !ok {
+			return nil, fmt.Errorf("invalid action is given")
+		}
+		newMsg.Action = fmt.Sprintf(value, msg.Action)
+	} else {
+		newMsg.Action = ""
+	}
+
 	msgJSON, err := json.Marshal(&newMsg)
 	if err != nil {
 		return nil, err
