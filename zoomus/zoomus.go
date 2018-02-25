@@ -108,6 +108,7 @@ func (c *Client) SendMessage(msg *Message) error {
 		return err
 	}
 	defer res.Body.Close()
+
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("http request failed: status: %s: url=%s", res.Status, c.WebhookURL.String())
 	}
