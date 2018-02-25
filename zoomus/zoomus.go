@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/pkg/errors"
 )
 
 // Client is zoom.us HTTP client.
@@ -58,7 +60,7 @@ func NewClient(webhook, token string) (*Client, error) {
 
 	p, err := url.Parse(webhook)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "fail to parse url")
 	}
 	c := &Client{
 		WebhookURL: p,
@@ -90,7 +92,7 @@ func makeJSONMassage(msg Message) ([]byte, error) {
 
 	msgJSON, err := json.Marshal(&newMsg)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "fail to marshalize")
 	}
 	return msgJSON, nil
 }
@@ -100,15 +102,19 @@ func makeJSONMassage(msg Message) ([]byte, error) {
 func (c *Client) SendMessage(msg Message) error {
 	msgJSON, err := makeJSONMassage(msg)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "fail to make json bytes")
 	}
 	req, err := http.NewRequest("POST", c.WebhookURL.String(), bytes.NewBuffer(msgJSON))
 	for k, v := range c.Header {
 		req.Header.Set(k, v)
 	}
+	if err != nil {
+		return errors.Wrap(err, "fail to create new request")
+	}
+
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "fail to send request")
 	}
 	defer res.Body.Close()
 
