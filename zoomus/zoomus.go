@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -129,8 +130,9 @@ func (c *Client) SendMessage(msg Message) error {
 
 	log.Printf("check status code")
 	// check status code
-	if res.StatusCode != http.StatusOK {
-		return fmt.Errorf("http request failed: status: %s: url=%s", res.Status, c.WebhookURL.String())
+	if res.StatusCode != 200 {
+		t, _ := ioutil.ReadAll(res.Body)
+		return fmt.Errorf("http request failed: status: %s: url=%s, body=%s", res.Status, c.WebhookURL.String(), string(t))
 	}
 	return nil
 }
