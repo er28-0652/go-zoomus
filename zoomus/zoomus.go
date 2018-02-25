@@ -49,6 +49,9 @@ var (
 
 // NewClient initialize Client with given webhook URL and Token.
 func NewClient(webhook, token string) (*Client, error) {
+	if len(webhook) == 0 {
+		return nil, fmt.Errorf("webhook url is missing")
+	}
 	if len(token) == 0 {
 		return nil, fmt.Errorf("token is missing")
 	}
@@ -69,7 +72,7 @@ func NewClient(webhook, token string) (*Client, error) {
 	return c, nil
 }
 
-func makeJSONMassage(msg *Message) ([]byte, error) {
+func makeJSONMassage(msg Message) ([]byte, error) {
 	newMsg := Message{
 		Title:   fmt.Sprintf(msgFormat, msg.Title),
 		Summary: fmt.Sprintf(msgFormat, msg.Summary),
@@ -94,7 +97,7 @@ func makeJSONMassage(msg *Message) ([]byte, error) {
 
 // SendMessage sends given message to your zoom room.
 // if it's successful, nill will be returned.
-func (c *Client) SendMessage(msg *Message) error {
+func (c *Client) SendMessage(msg Message) error {
 	msgJSON, err := makeJSONMassage(msg)
 	if err != nil {
 		return err
