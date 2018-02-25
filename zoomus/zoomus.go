@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 
 	"github.com/pkg/errors"
@@ -102,33 +101,28 @@ func makeJSONMassage(msg Message) ([]byte, error) {
 // SendMessage sends given message to your zoom room.
 // if it's successful, nill will be returned.
 func (c *Client) SendMessage(msg Message) error {
-
-	log.Printf("before makeJSONMessage")
 	// convert Message to JSON bytes
 	msgJSON, err := makeJSONMassage(msg)
 	if err != nil {
 		return errors.Wrap(err, "fail to make json bytes")
 	}
 
-	log.Printf("before NewRequest")
 	// create new Request with given params
 	req, err := http.NewRequest("POST", c.WebhookURL.String(), bytes.NewBuffer(msgJSON))
 	if err != nil {
 		return errors.Wrap(err, "fail to create new request")
 	}
 
-	log.Printf("setting Header")
 	// add necessary headers
 	for k, v := range c.Header {
 		req.Header.Add(k, v)
 	}
 
-	debug(httputil.DumpRequestOut(req, true))
-
 	log.Printf("send request")
 	// send http request
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
+		log.Printf("error after send request")
 		return errors.Wrap(err, "fail to send request")
 	}
 	defer res.Body.Close()
@@ -139,12 +133,4 @@ func (c *Client) SendMessage(msg Message) error {
 		return fmt.Errorf("http request failed: status: %s: url=%s", res.Status, c.WebhookURL.String())
 	}
 	return nil
-}
-
-func debug(data []byte, err error) {
-	if err == nil {
-		fmt.Printf("%s\n\n", data)
-	} else {
-		log.Fatalf("%s\n\n", err)
-	}
 }
