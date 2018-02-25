@@ -105,11 +105,12 @@ func (c *Client) SendMessage(msg Message) error {
 		return errors.Wrap(err, "fail to make json bytes")
 	}
 	req, err := http.NewRequest("POST", c.WebhookURL.String(), bytes.NewBuffer(msgJSON))
-	for k, v := range c.Header {
-		req.Header.Set(k, v)
-	}
 	if err != nil {
 		return errors.Wrap(err, "fail to create new request")
+	}
+
+	for k, v := range c.Header {
+		req.Header.Set(k, v)
 	}
 
 	res, err := c.HTTPClient.Do(req)
