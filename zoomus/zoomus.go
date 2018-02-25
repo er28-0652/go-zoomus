@@ -72,7 +72,7 @@ func NewClient(webhook, token string) (*Client, error) {
 func makeJSONMassage(msg *Message) ([]byte, error) {
 	newMsg := Message{
 		Title:   fmt.Sprintf(msgFormat, msg.Title),
-		Summary: fmt.Sprintf(msgFormat, msg.Title),
+		Summary: fmt.Sprintf(msgFormat, msg.Summary),
 		Body:    fmt.Sprintf(msgFormat, msg.Body),
 	}
 	if len(msg.Action) != 0 {
